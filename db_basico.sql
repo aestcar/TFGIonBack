@@ -50,9 +50,7 @@ CREATE TABLE Reserva (
   fechaIni VARCHAR(255),
   fechaFin VARCHAR(255),
   isbn VARCHAR(255) NOT NULL,
-  lectorId VARCHAR(255) NOT NULL,
-  FOREIGN KEY (lectorId) REFERENCES User(uID),
-  FOREIGN KEY (isbn) REFERENCES Book(isbn)
+  lectorId VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Disponibilidad (
@@ -64,9 +62,7 @@ CREATE TABLE Disponibilidad (
 CREATE TABLE ColaReservas (
   idUser VARCHAR(255),
   isbn VARCHAR(13),
-  PRIMARY KEY (idUser, isbn),
-  FOREIGN KEY (idUser) REFERENCES User(uID),
-  FOREIGN KEY (isbn) REFERENCES Book(isbn)
+  PRIMARY KEY (idUser, isbn)
 );
 
 INSERT INTO Book (isbn, autor, categoria, disponible, editorial, id, idioma, paginas, portadaImgPath, tipo, titulo)
@@ -128,8 +124,8 @@ VALUES
 ('Disponible', '9788425361791', 'En Biblioteca'),
 ('Disponible', '9788491295976', 'En Biblioteca');   
 
-INSERT INTO ColaReservas (idUser, isbn) 
-VALUES
-('D8Qov6gJwVWdE6f4LzrHGKDXd1t1','9788408260486');
+-- INSERT INTO ColaReservas (idUser, isbn) 
+-- VALUES
+-- ('D8Qov6gJwVWdE6f4LzrHGKDXd1t1','9788408260486');
     
 SET foreign_key_checks = 1;

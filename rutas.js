@@ -17,6 +17,10 @@ router.get("/books", (req, res) => {
 // GET books by id
 router.get("/books/:id", (req, res) => {
   const { id } = req.params;
+  const isbnPattern = '^(?=(?:[^0-9]*[0-9]){10}(?:(?:[^0-9]*[0-9]){3})?$)[\\d-]+$';
+  if(!id.match(isbnPattern)){
+    res.status(400).json({err: "El formato del isbn no es válido"});
+  }
   let sql = "select * from Book where isbn = ?";
   connexion.query(sql, [id], (err, rows) => {
     if (err) throw err;
@@ -189,6 +193,18 @@ router.get("/reservas/:isbn", (req, res) => {
   });
 });
 
+// GET reservas by id
+router.get("/reservasID/:userID", (req, res) => {
+  const { userID } = req.params;
+  let sql = "select * from Reserva where lectorId = ?";
+  connexion.query(sql, [userID], (err, rows) => {
+    if (err) throw err;
+    else {
+      res.status(200).json(rows);
+    }
+  });
+});
+
 // GET disponibilidades
 router.get("/disponibilidades", (req, res) => {
   let sql = "select * from Disponibilidad";
@@ -349,6 +365,25 @@ router.post("/reservas", (req, res) => {
       if (err) console.log(err);
       else {
         res.status(201).json({ message: "reserva created", id: result.insertId });
+      }
+    });
+  }
+});
+
+// POST new cola reservas
+router.post("/colareservas", (req, res) => {
+  const { idUser, isbn } = req.body;
+  if (!isbn) {
+    res.status(400).json({ message: "error isbn is required" });
+  } else {
+    const sql =
+      "INSERT INTO ColaReservas (idUser, isbn) VALUES (?, ?)";
+    const values = [idUser, isbn];
+
+    connexion.query(sql, values, (err, result) => {
+      if (err) console.log(err);
+      else {
+        res.status(201).json({ message: "cola reservas created", id: result.insertId });
       }
     });
   }
